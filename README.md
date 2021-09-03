@@ -59,11 +59,11 @@
 - Query: 
   - user: 接收消息的微信用户名，此用户名在企业微信管理后台 -> 通讯录 -> 点击联系人详情即可查看。多个接收者用`|`符号连接即可，`@all`则向该企业应用的全部成员发送。
   - push_key: 即`环境变量`部分的`WECHAT_PUSH_SECERT`。
-  - msg: 要发送的消息内容，支持换行以及a标签，可打开自定义标签，注意此部分需要进行URL转义(encodeComponent)
+  - msg: 要发送的消息内容，支持换行以及a标签，可打开自定义链接，注意此部分需要进行URL转义(`encodeURIComponent`)
 
 - 示例:
-  - user: vhvy
-  - push_key: secery_key
+  - user: `vhvy`
+  - push_key: `secery_key`
   - msg: `你的快递已到，请携带工卡前往邮件中心领取。\n出发前可查看<a href="http://work.weixin.qq.com">邮件中心视频实况</a>，聪明避开排队。`
   - `https://xxx.example.com/wechat_notice?user=vhvy&push_key=secery_key=%E4%BD%A0%E7%9A%84%E5%BF%AB%E9%80%92%E5%B7%B2%E5%88%B0%EF%BC%8C%E8%AF%B7%E6%90%BA%E5%B8%A6%E5%B7%A5%E5%8D%A1%E5%89%8D%E5%BE%80%E9%82%AE%E4%BB%B6%E4%B8%AD%E5%BF%83%E9%A2%86%E5%8F%96%E3%80%82%0A%E5%87%BA%E5%8F%91%E5%89%8D%E5%8F%AF%E6%9F%A5%E7%9C%8B%3Ca%20href%3D%22http%3A%2F%2Fwork.weixin.qq.com%22%3E%E9%82%AE%E4%BB%B6%E4%B8%AD%E5%BF%83%E8%A7%86%E9%A2%91%E5%AE%9E%E5%86%B5%3C%2Fa%3E%EF%BC%8C%E8%81%AA%E6%98%8E%E9%81%BF%E5%BC%80%E6%8E%92%E9%98%9F%E3%80%82`
 
