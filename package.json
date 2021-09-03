@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "wrangler dev --env development",
     "build": "wrangler build --env production",
-    "publish": "wrangler publish"
+    "publish": "wrangler publish --env production"
   },
   "author": "vhvy <vhvy@qq.com>",
   "license": "MIT",
