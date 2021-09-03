@@ -7,11 +7,22 @@ declare const WECHAT_AGENT_ID: string;
 
 const WECHAT_TOKEN_KEY = "__WECHAT_TOKEN_KEY__";
 
-interface AccessTokenResponse {
+interface WeChatResponse {
     errcode: number;
     errmsg: string;
+};
+
+interface AccessTokenResponse extends WeChatResponse {
     access_token: string;
     expires_in: number;
+};
+
+interface SendTxtMsgResponse extends WeChatResponse {
+    invaliduser: string;
+    invalidparty: string;
+    invalidtag: string;
+    msgid: string;
+    response_code: string;
 };
 
 interface SendAppMsgParams {
@@ -61,7 +72,7 @@ class Wechat {
         return token;
     }
 
-    public static async sendMsgToUser(text: string, touser: string): Promise<string> {
+    public static async sendMsgToUser(text: string, touser: string): Promise<SendTxtMsgResponse> {
         const token: string = await Wechat.getWeChatToken();
         const data: SendAppTxtMsgParamsFuil = {
             touser,
