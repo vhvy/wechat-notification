@@ -16,17 +16,27 @@ export interface ControllerParams extends UrlInfoObject {
 export const parseUrl = (url: string): UrlInfoObject => {
     const { pathname: path, search } = new URL(url);
 
-    const query = search.slice(1)
-        .split("&")
-        .reduce((o: QueryObject, r: string) => {
-            let [k, v] = r.split("=");
-            k = k?.trim();
-            v = v?.trim();
-            if (k && v) {
-                o[k] = v;
-            }
-            return o;
-        }, {});
+    const query: QueryObject = {};
+
+    for (let [k, v] of (new URLSearchParams(search))) {
+        k = k?.trim();
+        v = v?.trim();
+        if (v && v) {
+            query[k] = v;
+        }
+    };
+
+    // const query = search.slice(1)
+    //     .split("&")
+    //     .reduce((o: QueryObject, r: string) => {
+    //         let [k, v] = r.split("=");
+    //         k = k?.trim();
+    //         v = v?.trim();
+    //         if (k && v) {
+    //             o[k] = v;
+    //         }
+    //         return o;
+    //     }, {});
 
     return {
         path,

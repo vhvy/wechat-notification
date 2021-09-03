@@ -9,10 +9,6 @@ echo "`n请输入WECHAT_APP_SECERT: `n";
 wrangler.cmd secret put WECHAT_APP_SECERT --env development
 wrangler.cmd secret put WECHAT_APP_SECERT --env production
 
-echo "`n请输入WECHAT_USER_NAME: `n";
-
-wrangler.cmd secret put WECHAT_USER_NAME --env development
-wrangler.cmd secret put WECHAT_USER_NAME --env production
 
 echo "`n请输入WECHAT_AGENT_ID: `n";
 

@@ -3,7 +3,6 @@ import { buildUrl } from "@/utils/Url";
 declare const WECHAT_NOTICE_KV: KVNamespace;
 declare const WECHAT_COMPANY_ID: string;
 declare const WECHAT_APP_SECERT: string;
-declare const WECHAT_USER_NAME: string;
 declare const WECHAT_AGENT_ID: string;
 
 const WECHAT_TOKEN_KEY = "__WECHAT_TOKEN_KEY__";
@@ -62,18 +61,16 @@ class Wechat {
         return token;
     }
 
-    public static async sendMsgToUser(text: string): Promise<string> {
+    public static async sendMsgToUser(text: string, touser: string): Promise<string> {
         const token: string = await Wechat.getWeChatToken();
         const data: SendAppTxtMsgParamsFuil = {
-            touser: WECHAT_USER_NAME,
+            touser,
             msgtype: "text",
             text: {
                 content: text
             },
             agentid: Number(WECHAT_AGENT_ID)
         };
-
-        console.log(text);
 
         const url = buildUrl(this.baseUrl + "/message/send", {
             access_token: token
@@ -84,9 +81,7 @@ class Wechat {
             body: JSON.stringify(data)
         }).then(r => r.json());
 
-        console.log(JSON.stringify(res));
-
-        return "";
+        return res;
     }
 }
 
