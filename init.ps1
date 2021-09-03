@@ -14,3 +14,8 @@ echo "`n请输入WECHAT_AGENT_ID: `n";
 
 wrangler.cmd secret put WECHAT_AGENT_ID --env development
 wrangler.cmd secret put WECHAT_AGENT_ID --env production
+
+echo "`n请输入WECHAT_PUSH_SECERT: `n";
+
+wrangler.cmd secret put WECHAT_PUSH_SECERT --env development
+wrangler.cmd secret put WECHAT_PUSH_SECERT --env production

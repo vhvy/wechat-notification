@@ -16,7 +16,7 @@ async function handleRequest(request: Request): Promise<Response> {
             res = await route.handler(params);
         } catch (error) {
             console.log(error);
-            res = new Response("Oops!");
+            res = new Response((error as Error).message || "Oops!");
         }
         return res;
     }
