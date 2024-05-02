@@ -1,30 +1,7 @@
 name = "wechat-notification"
-type = "javascript"
-workers_dev = true
-# account_id = 
+main = "src/index.ts"
+compatibility_date = "2024-05-01"
 
-[dev]
-port = 9999
-local_protocol = "http"
-
-[build]
-command = "webpack --config webpack/index.js"
-
-[build.upload]
-format = "service-worker"
-
-
-[env.production]
-workers_dev = true
-# routes = [
-#     "https://exmaple.com/*"
-# ]
 kv_namespaces = [
-    { binding = "WECHAT_NOTICE_KV", id = "1ff9eb27795247408df742eaa13b2caa" }
-]
-
-[env.development]
-workers_dev = true
-kv_namespaces = [
-    { binding = "WECHAT_NOTICE_KV", preview_id = "1ff9eb27795247408df742eaa13b2caa",  id = "1ff9eb27795247408df742eaa13b2caa" }
+  { binding = "WECHAT_NOTICE_KV", id = "fa4b013e08a64f41ac85d217dbd1bc89" }
 ]

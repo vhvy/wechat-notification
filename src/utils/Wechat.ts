@@ -1,9 +1,5 @@
-import { buildUrl } from "@/utils/Url";
-
-declare const WECHAT_NOTICE_KV: KVNamespace;
-declare const WECHAT_COMPANY_ID: string;
-declare const WECHAT_APP_SECERT: string;
-declare const WECHAT_AGENT_ID: string;
+import { Env } from "..";
+import { buildUrl } from "./Url";
 
 const WECHAT_TOKEN_KEY = "__WECHAT_TOKEN_KEY__";
 
@@ -43,12 +39,18 @@ interface SendAppTxtMsgParamsFuil extends SendAppTxtMsgParams {
 }
 
 class Wechat {
-    private static readonly baseUrl: string = "https://qyapi.weixin.qq.com/cgi-bin";
+    private readonly baseUrl: string = "https://qyapi.weixin.qq.com/cgi-bin";
 
-    public static async flushWechatToken(): Promise<AccessTokenResponse> {
+    private env: Env;
+
+    public constructor(env: Env) {
+        this.env = env;
+    }
+
+    public async flushWechatToken(): Promise<AccessTokenResponse> {
         const url = buildUrl(this.baseUrl + "/gettoken", {
-            corpid: WECHAT_COMPANY_ID,
-            corpsecret: WECHAT_APP_SECERT
+            corpid: this.env.WECHAT_COMPANY_ID,
+            corpsecret: this.env.WECHAT_APP_SECERT
         });
         const res: AccessTokenResponse = await fetch(url).then(res => res.json());
 
@@ -59,12 +61,12 @@ class Wechat {
     }
 
 
-    public static async getWeChatToken(): Promise<string> {
-        const token = await WECHAT_NOTICE_KV.get(WECHAT_TOKEN_KEY);
+    public async getWeChatToken(): Promise<string> {
+        const token = await this.env.WECHAT_NOTICE_KV.get(WECHAT_TOKEN_KEY);
         if (token === null) {
             const nextTokenInfo = await this.flushWechatToken();
             const { access_token, expires_in } = nextTokenInfo;
-            await WECHAT_NOTICE_KV.put(WECHAT_TOKEN_KEY, access_token, {
+            await this.env.WECHAT_NOTICE_KV.put(WECHAT_TOKEN_KEY, access_token, {
                 expirationTtl: expires_in - 30
             });
             return access_token;
@@ -72,17 +74,17 @@ class Wechat {
         return token;
     }
 
-    public static async sendMsgToUser(text: string, touser: string): Promise<SendTxtMsgResponse> {
-        const token: string = await Wechat.getWeChatToken();
+    public async sendMsgToUser(text: string, touser: string): Promise<SendTxtMsgResponse> {
+        const token: string = await this.getWeChatToken();
         const data: SendAppTxtMsgParamsFuil = {
             touser,
             msgtype: "text",
             text: {
                 content: text
             },
-            agentid: Number(WECHAT_AGENT_ID)
+            agentid: Number(this.env.WECHAT_AGENT_ID)
         };
-
+        console.log(data)
         const url = buildUrl(this.baseUrl + "/message/send", {
             access_token: token
         });
@@ -90,7 +92,7 @@ class Wechat {
         const res = await fetch(url, {
             method: "POST",
             body: JSON.stringify(data)
-        }).then(r => r.json());
+        }).then(r => r.json()) as SendTxtMsgResponse;
 
         return res;
     }

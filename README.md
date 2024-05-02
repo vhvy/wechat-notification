@@ -6,7 +6,6 @@
 
 - 一个DNS服务器在CloudFlare的域名。
 - 去注册一个企业微信账号(个人即可注册，无需任何认证)。
-- CloudFlare的命令行工具 `npm i @cloudflare/wrangler -g`
 
 ## 准备工作
 
@@ -20,34 +19,27 @@
 
 - (此步可选)在查看`AgentId`的下方有个允许使用此应用的用户列表，可进行编辑。这个地方视企业类型而定，我看到有的企业里这一块是没有的。
 
-## Wrangler
+## Worker 相关配置
 
-> 文档见此 [https://developers.cloudflare.com/workers/cli-wrangler](https://developers.cloudflare.com/workers/cli-wrangler)
+- 项目根目录`npm i`
 
-- 使用`wrangler login`进行登录，或者按照上述文档中的`Authentication`部分进行鉴权。
+- 使用`wrangler login`进行登录
 
-- 将`account_id`填写到`wrangler.toml`中，或者配置到环境变量中。`CF_ACCOUNT_ID=accountID`
+    > 文档见此 [https://developers.cloudflare.com/workers/cli-wrangler](https://developers.cloudflare.com/workers/cli-wrangler)
 
-- `npm run publish`
 
-## 环境变量配置
+- 打开 Cloudflare 控制面板，打开KV控制台，新建一个KV命名空间，复制 KV 命名空间的 ID，替换`wrangler.toml`中的对应id
 
-打开`CloudFlare`控制面板，进入`Workers`部分。
+- 执行根目录中的`init.ps1`来配置相关环境变量
 
-此时应该出现了一个名为`wechat-notification-production`的worker，点击进入`设置`，添加环境变量，变量如下：
 
 |    变量名称             |     变量值  
 | :--------------------- | :-----------
-| WECHAT_AGENT_ID        | 应用AgentId
-| WECHAT_APP_SECERT      | 应用Secret
 | WECHAT_COMPANY_ID      | 企业ID
+| WECHAT_APP_SECERT      | 应用Secret
+| WECHAT_AGENT_ID        | 应用AgentId
 | WECHAT_PUSH_SECERT     | 自定义，用来防止被恶意滥用接口
 
-进入KV部分，新建一个KV命名空间，返回`Workers`部分，进入刚才的worker，点击进入`设置`，在下方的KV命名空间绑定中点击`编辑变量`，新增变量。
-
-|    变量名称             |    KV 命名空间
-| :--------------------- | :-----------
-| WECHAT_NOTICE_KV       |  方才新建的KV命名空间名称
 
 ## 使用
 
@@ -55,7 +47,7 @@
 
 - Method: `GET`
 - Url: worker里显示的dev域名`wechat-notification-production.example.workers.dev`，或者可以在域名控制面板的Workers部分 -> 添加路由 -> 路由(xxx.example.com/*) -> Worker(wechat-notification-production);
-- Path: `wechat_notice`
+- Path: `/`
 - Query: 
   - user: 接收消息的微信用户名，此用户名在企业微信管理后台 -> 通讯录 -> 点击联系人详情即可查看。多个接收者用`|`符号连接即可，`@all`则向该企业应用的全部成员发送。
   - push_key: 即`环境变量`部分的`WECHAT_PUSH_SECERT`。
